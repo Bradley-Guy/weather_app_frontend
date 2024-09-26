@@ -12,9 +12,8 @@ import './App.css'; // Import the CSS file for styling
 ChartJS.register(CategoryScale, ArcElement, Tooltip, Legend, LinearScale, PointElement, LineElement);
 
 const fetchData = async () => {
-  const REACT_APP_BACKEND_URL = "https://ahws-backend.azurewebsites.net";
   try {
-    const response = await fetch('${REACT_APP_BACKEND_URL}/data_get');
+    const response = await fetch('https://ahws-backend.azurewebsites.net/data_get');
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -34,7 +33,7 @@ const App = () => {
   const [precipitationArray, setPrecipitationArray] = React.useState([]);
   const [humidityArray, setHumidityArray] = React.useState([]);
   const [windDirectionArray, setWindDirectionArray] = React.useState([]);
-  const [windSpeedArray, setWindSpeedArray] = React.useState([]);
+  //const [windSpeedArray, setWindSpeedArray] = React.useState([]);
   const [soilMoistureArray, setSoilMoistureArray] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
