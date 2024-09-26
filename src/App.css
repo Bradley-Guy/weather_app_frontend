@@ -1,0 +1,80 @@
+/* App.css */
+
+.App {
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-content {
+  flex: 1; 
+}
+
+.logo {
+  width: 100%;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+nav ul li {
+  margin-bottom: 10px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #333;
+}
+
+nav ul li button {
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+nav ul li button:hover {
+  text-decoration: underline;
+}
+
+.dropdown {
+  display: none;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown li {
+  margin-bottom: 10px;
+}
+
+nav ul li:hover .dropdown {
+  display: block;
+}
+
+.content {
+  margin-left: 270px;
+  padding: 20px;
+  flex: 1;
+}
+
+
+.credit-box {
+  padding: 10px;
+  background-color: #eaeaea;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #333;
+  border-top: 1px solid #ccc;
+}
