@@ -12,7 +12,7 @@ import './App.css'; // Import the CSS file for styling
 ChartJS.register(CategoryScale, ArcElement, Tooltip, Legend, LinearScale, PointElement, LineElement);
 
 const fetchData = async () => {
-  const REACT_APP_BACKEND_URL = "aggie-home-weather-station.azurewebsites.net";
+  const REACT_APP_BACKEND_URL = "https://ahws-backend.azurewebsites.net";
   try {
     const response = await fetch('${REACT_APP_BACKEND_URL}/data_get');
     if (!response.ok) {
