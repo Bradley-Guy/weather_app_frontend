@@ -112,7 +112,7 @@ const App = () => {
 // LineGraph Component
 const LineGraph = ({ data, label, color }) => {
   const chartData = {
-    labels: data.map((_, i) => i),
+    labels: data.map((_, i) => i), // Assuming the x-axis represents the index of the data points
     datasets: [{
       label,
       data,
@@ -131,6 +131,20 @@ const LineGraph = ({ data, label, color }) => {
       title: {
         display: true,
         text: `${label} Chart`,
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Time (Index)', // Change this to a more meaningful label if needed
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: `${label}`, // Using the same label for the y-axis
+        },
       },
     },
   };
