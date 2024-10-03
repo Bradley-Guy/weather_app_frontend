@@ -50,7 +50,7 @@ const App = () => {
       setPrecipitationArray(data.map(d => d.precipitation || 0));
       setHumidityArray(data.map(d => d.humidity || 0));
       setWindDirectionArray(data.map(d => d.wind_direction || 0));
-      setWindSpeedArray(data.map(d => d.wind_speed_mph || 0));
+      //setWindSpeedArray(data.map(d => d.wind_speed_mph || 0));
       setSoilMoistureArray(data.map(d => d.soil_moisture || 0));
 
       setLoading(false);
