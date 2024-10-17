@@ -148,7 +148,7 @@ const LineGraph = ({ data, label, color, timestamps }) => {
           },
           label: function(tooltipItem) {
             // Show the value corresponding to the data point
-            return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y}`; // Customize the unit if needed
+            return `${tooltipItem.parsed.y}`; // Customize the unit if needed
           },
         },
       },
