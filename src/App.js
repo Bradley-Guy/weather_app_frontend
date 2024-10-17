@@ -102,13 +102,13 @@ const App = () => {
         <div className="content">
           <Routes>
             <Route path="/" element={<WeatherList weatherData={[weatherData, latestWeatherData]} />} />
-            <Route path="/temperature" element={<LineGraph data={temperatureArray} label="Temperature" color="rgb(128, 0, 0)" timestamps={timestampsArray}/>} />
-            <Route path="/pressure" element={<LineGraph data={pressureArray} label="Pressure" color="rgb(75, 192, 192)" timestamps={timestampsArray}/>} />
-            <Route path="/light" element={<LineGraph data={lightArray} label="Light" color="rgb(250, 223, 0)" timestamps={timestampsArray} />} />
-            <Route path="/precipitation" element={<LineGraph data={precipitationArray} label="Precipitation" color="rgb(0, 0, 102)" timestamps={timestampsArray}/>} />
-            <Route path="/humidity" element={<LineGraph data={humidityArray} label="Humidity" color="rgb(0, 153, 76)" timestamps={timestampsArray} />} />
-            <Route path="/wind-direction" element={<LineGraph data={windDirectionArray} label="Wind Direction" color="rgb(204, 0, 0)" timestamps={timestampsArray} />} />
-            <Route path="/soil-moisture" element={<LineGraph data={soilMoistureArray} label="Soil Moisture" color="rgb(118,85,43)" timestamps={timestampsArray} />} />
+            <Route path="/temperature" element={<LineGraph data={temperatureArray} label="Temperature" color="rgb(128, 0, 0)" timestamps={timestampsArray} unit="°F"/>} />
+            <Route path="/pressure" element={<LineGraph data={pressureArray} label="Pressure" color="rgb(75, 192, 192)" timestamps={timestampsArray} unit="bar" />} />
+            <Route path="/light" element={<LineGraph data={lightArray} label="Light" color="rgb(250, 223, 0)" timestamps={timestampsArray} unit="lux"  />} />
+            <Route path="/precipitation" element={<LineGraph data={precipitationArray} label="Precipitation" color="rgb(0, 0, 102)" timestamps={timestampsArray} unit="mL" />} />
+            <Route path="/humidity" element={<LineGraph data={humidityArray} label="Humidity" color="rgb(0, 153, 76)" timestamps={timestampsArray} unit="%RH"  />} />
+            <Route path="/wind-direction" element={<LineGraph data={windDirectionArray} label="Wind Direction" color="rgb(204, 0, 0)" timestamps={timestampsArray}  unit="°" />} />
+            <Route path="/soil-moisture" element={<LineGraph data={soilMoistureArray} label="Soil Moisture" color="rgb(118,85,43)" timestamps={timestampsArray}  unit="%" />} />
           </Routes>
         </div>
       </div>
@@ -116,9 +116,10 @@ const App = () => {
   );
 };
 
-const LineGraph = ({ data, label, color, timestamps }) => {
+// LineGraph Component
+const LineGraph = ({ data, label, color, unit, timestamps }) => {
   const chartData = {
-    labels: timestamps, // Use the time values for the x-axis
+    labels: timestamps, // Assuming the x-axis represents the index of the data points
     datasets: [{
       label,
       data,
@@ -132,26 +133,43 @@ const LineGraph = ({ data, label, color, timestamps }) => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: `${label} Chart`,
+        display: false, // Hides the legend
       },
       tooltip: {
-        callbacks: {
-          title: function(tooltipItems) {
-            // Use tooltipItems[0].parsed.x to get the x value (time)
-            const date = new Date(tooltipItems[0].parsed.x);
+        enabled: false, // Disable the default tooltip
+        external: function(context) {
+          let tooltipEl = document.getElementById('chartjs-tooltip');
+      
+          // Create tooltip element if it doesn't exist
+          if (!tooltipEl) {
+            tooltipEl = document.createElement('div');
+            tooltipEl.id = 'chartjs-tooltip';
+            tooltipEl.style.position = 'absolute';
+            tooltipEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            tooltipEl.style.color = 'white';
+            tooltipEl.style.padding = '8px';
+            tooltipEl.style.borderRadius = '4px';
+            tooltipEl.style.pointerEvents = 'none'; // Prevent mouse events
+            document.body.appendChild(tooltipEl);
+          }
+      
+          // Only show tooltip if hovering over a data point
+          if (context.tooltip && context.tooltip.opacity !== 0) {
+            const dataPoint = context.tooltip.dataPoints[0];
+            const date = new Date(dataPoint.parsed.x);
             const options = { hour: 'numeric', minute: 'numeric', hour12: true };
-            return date.toLocaleTimeString('en-US', options); // e.g., "5:45 PM"
-          },
-          label: function(tooltipItem) {
-            // Show the value corresponding to the data point
-            return `${tooltipItem.parsed.y}`; // Customize the unit if needed
-          },
+            const timeString = date.toLocaleTimeString('en-US', options);
+            const valueString = `${dataPoint.dataset.label}: ${dataPoint.parsed.y} ${unit}`; // Include unit here
+      
+            tooltipEl.innerHTML = `${timeString}<br>${valueString}`;
+            tooltipEl.style.left = context.tooltip.caretX + 215 + 'px'; // Add offset to the left
+            tooltipEl.style.top = context.tooltip.caretY + 1 + 'px'; // Add offset upwards
+            tooltipEl.style.opacity = 1; // Show tooltip
+          } else if (tooltipEl) {
+            tooltipEl.style.opacity = 0; // Hide tooltip
+          }
         },
-      },
+      }      
     },
     scales: {
       x: {
@@ -161,22 +179,29 @@ const LineGraph = ({ data, label, color, timestamps }) => {
           text: 'Time',
         },
         time: {
-          unit: 'minute',
+          unit: 'hour',
         },
       },
       y: {
         title: {
           display: true,
-          text: `${label}`,
+          text: `${label} (${unit})`,
         },
       },
     },
   };
-  
-  
 
-  return <Line options={options} data={chartData} />;
+  return (
+    <div style={{ textAlign: 'center' }}>
+      {/* Title and Unit */}
+      <h2 style={{ margin: '0', padding: '10px 0' }}>
+        {label} ({unit})
+      </h2>
+      <Line options={options} data={chartData} />
+    </div>
+  );
 };
+
 
 
 

@@ -80,7 +80,7 @@ const WeatherList = ({ weatherData }) => {
   return (
     <ThemeProvider theme={theme}>
       <div>
-        <h3>Current Weather</h3>
+        <h1>Current Weather</h1>
         {date && <div>Time: {date.toString()}</div>}
         <div>Temperature: {temperature} °{tempUnit}</div>
         {tempUnit !== 'F' && (
