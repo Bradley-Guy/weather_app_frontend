@@ -2,14 +2,15 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import WeatherList from './components/WeatherList'; // Import WeatherList component
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
+import 'chartjs-adapter-date-fns'; // Make sure this import is present
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, TimeScale } from 'chart.js';
 import { ReactComponent as MyLogo } from './AHWS_Logo.svg';
 import './App.css'; // Import the CSS file for styling
 
 
 
 
-ChartJS.register(CategoryScale, ArcElement, Tooltip, Legend, LinearScale, PointElement, LineElement);
+ChartJS.register(CategoryScale, ArcElement, Tooltip, Legend, LinearScale, PointElement, LineElement, TimeScale);
 
 const fetchData = async () => {
   try {
@@ -33,9 +34,11 @@ const App = () => {
   const [precipitationArray, setPrecipitationArray] = React.useState([]);
   const [humidityArray, setHumidityArray] = React.useState([]);
   const [windDirectionArray, setWindDirectionArray] = React.useState([]);
-  //const [windSpeedArray, setWindSpeedArray] = React.useState([]);
+  //const [timeArray, settimeArray] = React.useState([]);
   const [soilMoistureArray, setSoilMoistureArray] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [timestampsArray, setTimestampsArray] = React.useState([]);
+
 
   React.useEffect(() => {
     const loadData = async () => {
@@ -50,8 +53,12 @@ const App = () => {
       setPrecipitationArray(data.map(d => d.precipitation || 0));
       setHumidityArray(data.map(d => d.humidity || 0));
       setWindDirectionArray(data.map(d => d.wind_direction || 0));
-      //setWindSpeedArray(data.map(d => d.wind_speed_mph || 0));
+      //settimeArray(data.map(d => d.time || ''));
       setSoilMoistureArray(data.map(d => d.soil_moisture || 0));
+      
+      // Extract timestamps in ISO format
+      const timestamps = data.map(d => d.time || '');
+      setTimestampsArray(timestamps);
 
       setLoading(false);
     };
@@ -95,13 +102,13 @@ const App = () => {
         <div className="content">
           <Routes>
             <Route path="/" element={<WeatherList weatherData={[weatherData, latestWeatherData]} />} />
-            <Route path="/temperature" element={<LineGraph data={temperatureArray} label="Temperature" color="rgb(128, 0, 0)" />} />
-            <Route path="/pressure" element={<LineGraph data={pressureArray} label="Pressure" color="rgb(75, 192, 192)" />} />
-            <Route path="/light" element={<LineGraph data={lightArray} label="Light" color="rgb(250, 223, 0)" />} />
-            <Route path="/precipitation" element={<LineGraph data={precipitationArray} label="Precipitation" color="rgb(0, 0, 102)" />} />
-            <Route path="/humidity" element={<LineGraph data={humidityArray} label="Humidity" color="rgb(0, 153, 76)" />} />
-            <Route path="/wind-direction" element={<LineGraph data={windDirectionArray} label="Wind Direction" color="rgb(204, 0, 0)" />} />
-            <Route path="/soil-moisture" element={<LineGraph data={soilMoistureArray} label="Soil Moisture" color="rgb(118,85,43)" />} />
+            <Route path="/temperature" element={<LineGraph data={temperatureArray} label="Temperature" color="rgb(128, 0, 0)" timestamps={timestampsArray}/>} />
+            <Route path="/pressure" element={<LineGraph data={pressureArray} label="Pressure" color="rgb(75, 192, 192)" timestamps={timestampsArray}/>} />
+            <Route path="/light" element={<LineGraph data={lightArray} label="Light" color="rgb(250, 223, 0)" timestamps={timestampsArray} />} />
+            <Route path="/precipitation" element={<LineGraph data={precipitationArray} label="Precipitation" color="rgb(0, 0, 102)" timestamps={timestampsArray}/>} />
+            <Route path="/humidity" element={<LineGraph data={humidityArray} label="Humidity" color="rgb(0, 153, 76)" timestamps={timestampsArray} />} />
+            <Route path="/wind-direction" element={<LineGraph data={windDirectionArray} label="Wind Direction" color="rgb(204, 0, 0)" timestamps={timestampsArray} />} />
+            <Route path="/soil-moisture" element={<LineGraph data={soilMoistureArray} label="Soil Moisture" color="rgb(118,85,43)" timestamps={timestampsArray} />} />
           </Routes>
         </div>
       </div>
@@ -109,14 +116,13 @@ const App = () => {
   );
 };
 
-// LineGraph Component
-const LineGraph = ({ data, label, color }) => {
+const LineGraph = ({ data, label, color, timestamps }) => {
   const chartData = {
-    labels: data.map((_, i) => i), // Assuming the x-axis represents the index of the data points
+    labels: timestamps, // Use the time values for the x-axis
     datasets: [{
       label,
       data,
-      fill: false,
+      fill: true,
       borderColor: color,
       tension: 0.1
     }]
@@ -132,24 +138,46 @@ const LineGraph = ({ data, label, color }) => {
         display: true,
         text: `${label} Chart`,
       },
+      tooltip: {
+        callbacks: {
+          title: function(tooltipItems) {
+            // Use tooltipItems[0].parsed.x to get the x value (time)
+            const date = new Date(tooltipItems[0].parsed.x);
+            const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+            return date.toLocaleTimeString('en-US', options); // e.g., "5:45 PM"
+          },
+          label: function(tooltipItem) {
+            // Show the value corresponding to the data point
+            return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y}`; // Customize the unit if needed
+          },
+        },
+      },
     },
     scales: {
       x: {
+        type: 'time',
         title: {
           display: true,
-          text: 'Time (Index)', // Change this to a more meaningful label if needed
+          text: 'Time',
+        },
+        time: {
+          unit: 'minute',
         },
       },
       y: {
         title: {
           display: true,
-          text: `${label}`, // Using the same label for the y-axis
+          text: `${label}`,
         },
       },
     },
   };
+  
+  
 
   return <Line options={options} data={chartData} />;
 };
+
+
 
 export default App;
