@@ -28,11 +28,11 @@ const App = () => {
   const [latestWeatherData, setLatestWeatherData] = React.useState({});
   const [temperatureArray, setTemperatureArray] = React.useState([]);
   const [pressureArray, setPressureArray] = React.useState([]);
-  const [lightArray, setLightArray] = React.useState([]);
-  const [precipitationArray, setPrecipitationArray] = React.useState([]);
+  // const [lightArray, setLightArray] = React.useState([]);
+  // const [precipitationArray, setPrecipitationArray] = React.useState([]);
   const [humidityArray, setHumidityArray] = React.useState([]);
-  const [windDirectionArray, setWindDirectionArray] = React.useState([]);
-  const [soilMoistureArray, setSoilMoistureArray] = React.useState([]);
+  // const [windDirectionArray, setWindDirectionArray] = React.useState([]);
+  // const [soilMoistureArray, setSoilMoistureArray] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [timestampsArray, setTimestampsArray] = React.useState([]);
 
@@ -44,11 +44,11 @@ const App = () => {
       setLatestWeatherData(data[0] || {});
       setTemperatureArray(data.map(d => d.temperature || 0));
       setPressureArray(data.map(d => d.pressure_bar || 0));
-      setLightArray(data.map(d => d.light || 0));
-      setPrecipitationArray(data.map(d => d.precipitation || 0));
+      // setLightArray(data.map(d => d.light || 0));
+      // setPrecipitationArray(data.map(d => d.precipitation || 0));
       setHumidityArray(data.map(d => d.humidity || 0));
-      setWindDirectionArray(data.map(d => d.wind_direction || 0));
-      setSoilMoistureArray(data.map(d => d.soil_moisture || 0));
+      // setWindDirectionArray(data.map(d => d.wind_direction || 0));
+      // setSoilMoistureArray(data.map(d => d.soil_moisture || 0));
       setTimestampsArray(data.map(d => d.time || ''));
       setLoading(false);
     };
