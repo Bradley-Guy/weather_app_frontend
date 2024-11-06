@@ -81,7 +81,7 @@ const WeatherList = ({ weatherData }) => {
     <ThemeProvider theme={theme}>
       <div>
         <h1>Current Weather</h1>
-        {date && <div>Time: {date.toString()}</div>}
+        {date && <div>Time: {date.toLocaleTimeString()} </div>}
         <div>Temperature: {temperature} °{tempUnit}</div>
         {tempUnit !== 'F' && (
           <Button size="small" color="primary" variant="contained" onClick={handleConvertToFahrenheit}>
