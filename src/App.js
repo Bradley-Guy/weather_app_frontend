@@ -68,7 +68,7 @@ const App = () => {
           <div className="sidebar-content">
             <nav>
               <ul>
-                <li><Link to="/">Current Weather</Link></li>
+                <li><Link to="/">Current Weather</Link></li> 
                 <li>
                   <button>Weather Graphs</button>
                   <ul className="dropdown">
