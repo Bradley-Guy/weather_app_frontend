@@ -4,7 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme({
   typography: {
-    fontSize: 12,
+    fontSize: 10,
   },
   palette: {
     primary: {
@@ -99,7 +99,7 @@ const WeatherList = ({ weatherData }) => {
           Cycle Pressure Unit
         </Button>
 
-        <div>Wind Speed: {windSpeed} {windUnit}</div>
+        {/* <div>Wind Speed: {windSpeed} {windUnit}</div>
         {windUnit !== 'mph' && (
           <Button size="small" color="primary" variant="contained" onClick={handleConvertToMph}>
             Convert to Mph
@@ -110,7 +110,7 @@ const WeatherList = ({ weatherData }) => {
             Convert to KpH
           </Button>
         )}
-
+{/* 
         <div>Light: {light} {lightUnit}</div>
         {lightUnit !== 'lux' && (
           <Button size="small" color="primary" variant="contained" onClick={handleConvertToLux}>
@@ -121,9 +121,9 @@ const WeatherList = ({ weatherData }) => {
           <Button size="small" color="primary" variant="contained" onClick={handleConvertToFootCandles}>
             Convert to Foot-Candles
           </Button>
-        )}
+        )} */} 
 
-        <div>Precipitation: {precipitation} {precipitationUnit}</div>
+        {/* <div>Precipitation: {precipitation} {precipitationUnit}</div>
         {precipitationUnit !== 'mL' && (
           <Button size="small" color="primary" variant="contained" onClick={handleConvertToMl}>
             Convert to mL
@@ -133,11 +133,11 @@ const WeatherList = ({ weatherData }) => {
           <Button size="small" color="primary" variant="contained" onClick={handleConvertToInches}>
             Convert to Inches
           </Button>
-        )}
+        )} */}
 
-        <div>Soil Moisture: {latest?.soil_moisture} %</div>
+        {/* <div>Soil Moisture: {latest?.soil_moisture} %</div> */}
         <div>Humidity: {latest?.humidity} %RH</div>
-        <div>Wind Direction: {latest?.wind_direction}°</div>
+        {/* <div>Wind Direction: {latest?.wind_direction}°</div> */}
       </div>
     </ThemeProvider>
   );
