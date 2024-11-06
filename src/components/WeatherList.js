@@ -16,9 +16,9 @@ const theme = createTheme({
 const WeatherList = ({ weatherData }) => {
   const [tempUnit, setTempUnit] = useState('F');
   const [pressureUnit, setPressureUnit] = useState('bar');
-  const [windUnit, setWindUnit] = useState('mph');
-  const [lightUnit, setLightUnit] = useState('lux');
-  const [precipitationUnit, setPrecipitationUnit] = useState('mL');
+  // const [windUnit, setWindUnit] = useState('mph');
+  // const [lightUnit, setLightUnit] = useState('lux');
+  // const [precipitationUnit, setPrecipitationUnit] = useState('mL');
 
   const latest = weatherData[1];
   const date = latest ? new Date(latest.time) : null;
@@ -35,20 +35,20 @@ const WeatherList = ({ weatherData }) => {
     });
   };
 
-  const handleConvertToMph = () => setWindUnit('mph');
-  const handleConvertToKph = () => setWindUnit('kph');
+  // const handleConvertToMph = () => setWindUnit('mph');
+  // const handleConvertToKph = () => setWindUnit('kph');
   
-  const handleConvertToLux = () => setLightUnit('lux');
-  const handleConvertToFootCandles = () => setLightUnit('fc');
+  // const handleConvertToLux = () => setLightUnit('lux');
+  // const handleConvertToFootCandles = () => setLightUnit('fc');
   
-  const handleConvertToMl = () => setPrecipitationUnit('mL');
-  const handleConvertToInches = () => setPrecipitationUnit('in');
+  // const handleConvertToMl = () => setPrecipitationUnit('mL');
+  // const handleConvertToInches = () => setPrecipitationUnit('in');
 
   let temperature = latest?.temperature;
-  let windSpeed = latest?.wind_speed_mph;
+  // let windSpeed = latest?.wind_speed_mph;
   let pressure = latest?.pressure_bar;
-  let light = latest?.light;
-  let precipitation = latest?.precipitation;
+  // let light = latest?.light;
+  // let precipitation = latest?.precipitation;
 
   // Temperature conversion
   if (tempUnit === 'C') {
@@ -62,20 +62,20 @@ const WeatherList = ({ weatherData }) => {
     pressure = (pressure * 750.062).toFixed(3);
   }
 
-  // Wind speed conversion
-  if (windUnit === 'kph') {
-    windSpeed = (windSpeed * 1.609344).toFixed(2);
-  }
+  // // Wind speed conversion
+  // if (windUnit === 'kph') {
+  //   windSpeed = (windSpeed * 1.609344).toFixed(2);
+  // }
 
-  // Light conversion
-  if (lightUnit === 'fc') {
-    light = (light * 0.092903).toFixed(2);
-  }
+  // // Light conversion
+  // if (lightUnit === 'fc') {
+  //   light = (light * 0.092903).toFixed(2);
+  // }
 
-  // Precipitation conversion
-  if (precipitationUnit === 'in') {
-    precipitation = (precipitation * 0.0393701).toFixed(3);
-  }
+  // // Precipitation conversion
+  // if (precipitationUnit === 'in') {
+  //   precipitation = (precipitation * 0.0393701).toFixed(3);
+  // }
 
   return (
     <ThemeProvider theme={theme}>
