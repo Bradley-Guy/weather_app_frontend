@@ -15,7 +15,7 @@ const theme = createTheme({
 
 const WeatherList = ({ weatherData }) => {
   const [tempUnit, setTempUnit] = useState('F');
-  const [pressureUnit, setPressureUnit] = useState('bar');
+  const [pressureUnit, setPressureUnit] = useState('mbar');
   // const [windUnit, setWindUnit] = useState('mph');
   // const [lightUnit, setLightUnit] = useState('lux');
   // const [precipitationUnit, setPrecipitationUnit] = useState('mL');
@@ -29,9 +29,9 @@ const WeatherList = ({ weatherData }) => {
   // Function to cycle through pressure units
   const cyclePressureUnit = () => {
     setPressureUnit(prevUnit => {
-      if (prevUnit === 'bar') return 'atm';
+      if (prevUnit === 'mbar') return 'atm';
       if (prevUnit === 'atm') return 'mmHg';
-      return 'bar';
+      return 'mbar';
     });
   };
 
@@ -57,9 +57,9 @@ const WeatherList = ({ weatherData }) => {
 
   // Pressure conversion
   if (pressureUnit === 'atm') {
-    pressure = (pressure * 0.986923).toFixed(3);
+    pressure = (pressure / 1013).toFixed(3);
   } else if (pressureUnit === 'mmHg') {
-    pressure = (pressure * 750.062).toFixed(3);
+    pressure = (pressure / 1.333).toFixed(3);
   }
 
   // // Wind speed conversion
