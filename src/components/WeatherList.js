@@ -47,12 +47,15 @@ const WeatherList = ({ weatherData }) => {
   let temperature = latest?.temperature;
   // let windSpeed = latest?.wind_speed_mph;
   let pressure = latest?.pressure_bar;
+  let humidity = latest?.humidity;
   // let light = latest?.light;
   // let precipitation = latest?.precipitation;
 
   // Temperature conversion
   if (tempUnit === 'C') {
     temperature = (((temperature - 32) * 5) / 9).toFixed(2);
+  } else {
+    temperature = temperature.toFixed(2);
   }
 
   // Pressure conversion
@@ -60,22 +63,12 @@ const WeatherList = ({ weatherData }) => {
     pressure = (pressure / 1013).toFixed(3);
   } else if (pressureUnit === 'mmHg') {
     pressure = (pressure / 1.333).toFixed(3);
+  } else {
+    pressure = pressure.toFixed(3);
   }
 
-  // // Wind speed conversion
-  // if (windUnit === 'kph') {
-  //   windSpeed = (windSpeed * 1.609344).toFixed(2);
-  // }
+  humidity = humidity.toFixed(2);
 
-  // // Light conversion
-  // if (lightUnit === 'fc') {
-  //   light = (light * 0.092903).toFixed(2);
-  // }
-
-  // // Precipitation conversion
-  // if (precipitationUnit === 'in') {
-  //   precipitation = (precipitation * 0.0393701).toFixed(3);
-  // }
 
   return (
     <ThemeProvider theme={theme}>
@@ -99,45 +92,7 @@ const WeatherList = ({ weatherData }) => {
           Cycle Pressure Unit
         </Button>
 
-        {/* <div>Wind Speed: {windSpeed} {windUnit}</div>
-        {windUnit !== 'mph' && (
-          <Button size="small" color="primary" variant="contained" onClick={handleConvertToMph}>
-            Convert to Mph
-          </Button>
-        )}
-        {windUnit !== 'kph' && (
-          <Button size="small" color="primary" variant="contained" onClick={handleConvertToKph}>
-            Convert to KpH
-          </Button>
-        )}
-{/* 
-        <div>Light: {light} {lightUnit}</div>
-        {lightUnit !== 'lux' && (
-          <Button size="small" color="primary" variant="contained" onClick={handleConvertToLux}>
-            Convert to Lux
-          </Button>
-        )}
-        {lightUnit !== 'fc' && (
-          <Button size="small" color="primary" variant="contained" onClick={handleConvertToFootCandles}>
-            Convert to Foot-Candles
-          </Button>
-        )} */} 
-
-        {/* <div>Precipitation: {precipitation} {precipitationUnit}</div>
-        {precipitationUnit !== 'mL' && (
-          <Button size="small" color="primary" variant="contained" onClick={handleConvertToMl}>
-            Convert to mL
-          </Button>
-        )}
-        {precipitationUnit !== 'in' && (
-          <Button size="small" color="primary" variant="contained" onClick={handleConvertToInches}>
-            Convert to Inches
-          </Button>
-        )} */}
-
-        {/* <div>Soil Moisture: {latest?.soil_moisture} %</div> */}
-        <div>Humidity: {latest?.humidity} %RH</div>
-        {/* <div>Wind Direction: {latest?.wind_direction}°</div> */}
+        <div>Humidity: {humidity} %RH</div>
       </div>
     </ThemeProvider>
   );

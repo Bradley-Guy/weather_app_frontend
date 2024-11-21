@@ -37,6 +37,15 @@ const App = () => {
   const [timestampsArray, setTimestampsArray] = React.useState([]);
 
   React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      window.location.reload(); // This reloads the entire page
+    }, 30000); // 60000 ms = 1 minute
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array to run only once when the component mounts
+
+  React.useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       const data = await fetchData();
@@ -105,23 +114,36 @@ const App = () => {
   );
 };
 
-const filterDataByTimeframe = (timestamps, data, hours) => {
-  const now = new Date();
-  return timestamps
-    .map((timestamp, index) => ({ timestamp: new Date(timestamp), data: data[index] }))
-    .filter(({ timestamp }) => (now - timestamp) / (1000 * 60 * 60) <= hours);
-};
 
 const LineGraph = ({ data, label, color, unit, timestamps }) => {
-  const [filteredData, setFilteredData] = React.useState(data);
-  const [filteredTimestamps, setFilteredTimestamps] = React.useState(timestamps);
+  // Function to filter data by timeframe (in hours)
+  const filterDataByTimeframe = (timestamps, data, hours) => {
+    const now = new Date();
+    return timestamps
+      .map((timestamp, index) => ({ timestamp: new Date(timestamp), data: data[index] }))
+      .filter(({ timestamp }) => (now - timestamp) / (1000 * 60 * 60) <= hours);
+  };
 
+  // State for filtered data and timestamps
+  const [filteredData, setFilteredData] = React.useState([]);
+  const [filteredTimestamps, setFilteredTimestamps] = React.useState([]);
+
+  // Set the default data to the last 12 hours when the component mounts or when data/timestamps change
+  React.useEffect(() => {
+    // Default to 12-hour data
+    const initialFiltered = filterDataByTimeframe(timestamps, data, 1);
+    setFilteredTimestamps(initialFiltered.map(({ timestamp }) => timestamp));
+    setFilteredData(initialFiltered.map(({ data }) => data));
+  }, [data, timestamps]); // Re-run whenever data or timestamps change
+
+  // Handle timeframe change (e.g., 1 hour, 12 hours, etc.)
   const handleTimeframeChange = (hours) => {
     const filtered = filterDataByTimeframe(timestamps, data, hours);
     setFilteredTimestamps(filtered.map(({ timestamp }) => timestamp));
     setFilteredData(filtered.map(({ data }) => data));
   };
 
+  // Chart data configuration
   const chartData = {
     labels: filteredTimestamps,
     datasets: [{
@@ -133,6 +155,7 @@ const LineGraph = ({ data, label, color, unit, timestamps }) => {
     }]
   };
 
+  // Chart options configuration
   const options = {
     responsive: true,
     plugins: {
@@ -159,7 +182,7 @@ const LineGraph = ({ data, label, color, unit, timestamps }) => {
             const date = new Date(dataPoint.parsed.x);
             const options = { hour: 'numeric', minute: 'numeric', hour12: true };
             const timeString = date.toLocaleTimeString('en-US', options);
-            const valueString = `${dataPoint.dataset.label}: ${dataPoint.parsed.y} ${unit}`;
+            const valueString = `${dataPoint.dataset.label}: ${dataPoint.parsed.y.toFixed(2)} ${unit}`;
             tooltipEl.innerHTML = `${timeString}<br>${valueString}`;
             tooltipEl.style.left = context.tooltip.caretX + 215 + 'px';
             tooltipEl.style.top = context.tooltip.caretY + 40 + 'px';
@@ -205,5 +228,7 @@ const LineGraph = ({ data, label, color, unit, timestamps }) => {
     </div>
   );
 };
+
+
 
 export default App;
